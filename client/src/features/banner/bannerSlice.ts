@@ -1,114 +1,92 @@
-"use client";
-
+import { api } from "@/store";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import api from "@/store/axiosInstance";
-import { AxiosError } from "axios";
 import { Banner, BannerState } from "./bannerTypes";
+import { AxiosError } from "axios";
 
-export const fetchBan = createAsyncThunk<Banner, void, { rejectValue: string }>(
-  "banner/fetch",
-  async (_, { rejectWithValue }) => {
-    try {
-      const res = await api.get("/banners");
-      return res.data;
-    } catch (error) {
-      return rejectWithValue("banner get fail");
-    }
+// Error handling
+const getErrorMessage = (error: unknown): string => {
+  if (error instanceof AxiosError) {
+    const axiosError = error as AxiosError<{ message: string }>;
+    return axiosError.response?.data?.message || error.message;
   }
-);
+  if (error instanceof Error) return error.message || "Something went wrong";
+  if (typeof error === "string") return error;
+  return "Something went wrong";
+};
 
-// 🔹 একক ব্যানার ফেচ
+// ----------------------
+// Async Thunks
+// ----------------------
+
+// Fetch all banners
 export const fetchBanner = createAsyncThunk<
-  Banner,
+  Banner[],
   void,
   { rejectValue: string }
 >("banner/fetch", async (_, { rejectWithValue }) => {
   try {
     const res = await api.get("/banners");
-    return res.data; // ধরছি backend থেকে object আসছে
+    return res.data;
   } catch (error) {
-    const axiosError = error as AxiosError<{ message?: string }>;
-    const message =
-      axiosError.response?.data?.message ||
-      axiosError.message ||
-      "Failed to fetch banner";
-    console.error("fetch Banner error:", message);
-    return rejectWithValue(message);
+    return rejectWithValue(getErrorMessage(error));
   }
 });
 
-// 🔹 নতুন ব্যানার তৈরি
+// Create a new banner
 export const createBanner = createAsyncThunk<
   Banner,
   FormData,
   { rejectValue: string }
 >("banner/create", async (data, { rejectWithValue }) => {
   try {
-    const res = await api.post("/banners", data, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    const res = await api.post("/banners", data);
     return res.data;
   } catch (error) {
-    const axiosError = error as AxiosError<{ message?: string }>;
-    const message =
-      axiosError.response?.data?.message ||
-      axiosError.message ||
-      "Failed to create banner";
-    console.error("create Banner error:", message);
-    return rejectWithValue(message);
+    return rejectWithValue(getErrorMessage(error));
   }
 });
 
-// 🔹 ব্যানার আপডেট
+// Update a banner
 export const updateBanner = createAsyncThunk<
   Banner,
   { id: string; data: FormData },
   { rejectValue: string }
 >("banner/update", async ({ id, data }, { rejectWithValue }) => {
   try {
-    const res = await api.put(`/banners/${id}`, data, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    const res = await api.put(`/banners/${id}`, data);
     return res.data;
   } catch (error) {
-    const axiosError = error as AxiosError<{ message?: string }>;
-    const message =
-      axiosError.response?.data?.message ||
-      axiosError.message ||
-      "Failed to update banner";
-    console.error("update Banner error:", message);
-    return rejectWithValue(message);
+    return rejectWithValue(getErrorMessage(error));
   }
 });
-
-// 🔹 ব্যানার ডিলিট
+// delete a banner
 export const deleteBanner = createAsyncThunk<
-  string,
-  string,
+  string, // fulfilled value type (যা return হবে)
+  string, // argument type (banner id)
   { rejectValue: string }
 >("banner/delete", async (id, { rejectWithValue }) => {
   try {
-    await api.delete(`/banners/${id}`);
-    return id;
+    const res = await api.delete(`/banners/${id}`);
+    return res.data; // backend থেকে যেটা আসে সেটা return করুন
   } catch (error) {
-    const axiosError = error as AxiosError<{ message?: string }>;
-    const message =
-      axiosError.response?.data?.message ||
-      axiosError.message ||
-      "Failed to delete banner";
-    console.error("delete Banner error:", message);
-    return rejectWithValue(message);
+    return rejectWithValue(getErrorMessage(error));
   }
 });
 
-// 🔹 initial state
+// ----------------------
+// Initial State
+// ----------------------
 const initialState: BannerState = {
-  banner: null,
+  banners: [],
+  backendResponse: undefined,
+  backendHistory: [],
   status: "idle",
   error: null,
 };
 
-// 🔹 Slice তৈরি
+// ----------------------
+// Slice
+// ----------------------
 const bannerSlice = createSlice({
   name: "banner",
   initialState,
@@ -116,29 +94,33 @@ const bannerSlice = createSlice({
     resetBanner: (state) => {
       state.status = "idle";
       state.error = null;
-      state.banner = null;
+      state.banners = [];
+      state.backendResponse = undefined;
+      state.backendHistory = [];
     },
   },
   extraReducers: (builder) => {
+    // Fetch
     builder
-      // Fetch
       .addCase(fetchBanner.pending, (state) => {
         state.status = "pending";
         state.error = null;
       })
       .addCase(
         fetchBanner.fulfilled,
-        (state, action: PayloadAction<Banner>) => {
+        (state, action: PayloadAction<Banner[]>) => {
           state.status = "fulfilled";
-          state.banner = action.payload;
+          state.error = null;
+          state.banners = action.payload;
         }
       )
       .addCase(fetchBanner.rejected, (state, action) => {
         state.status = "rejected";
-        state.error = action.payload || "Failed to fetch banner";
-      })
+        state.error = action.payload;
+      });
 
-      // Create
+    // Create
+    builder
       .addCase(createBanner.pending, (state) => {
         state.status = "pending";
         state.error = null;
@@ -147,15 +129,19 @@ const bannerSlice = createSlice({
         createBanner.fulfilled,
         (state, action: PayloadAction<Banner>) => {
           state.status = "fulfilled";
-          state.banner = action.payload;
+          state.error = null;
+          state.banners.push(action.payload);
+          state.backendResponse = action.payload;
+          state.backendHistory.push(action.payload);
         }
       )
       .addCase(createBanner.rejected, (state, action) => {
         state.status = "rejected";
-        state.error = action.payload || "Failed to create banner";
-      })
+        state.error = action.payload;
+      });
 
-      // Update
+    // Update
+    builder
       .addCase(updateBanner.pending, (state) => {
         state.status = "pending";
         state.error = null;
@@ -164,26 +150,43 @@ const bannerSlice = createSlice({
         updateBanner.fulfilled,
         (state, action: PayloadAction<Banner>) => {
           state.status = "fulfilled";
-          state.banner = action.payload;
+          state.error = null;
+
+          // Update frontend array
+          const index = state.banners.findIndex(
+            (b) => b._id === action.payload._id
+          );
+          if (index !== -1) {
+            state.banners[index] = action.payload;
+          } else {
+            state.banners.push(action.payload);
+          }
+
+          // Save latest backend response and history
+          state.backendResponse = action.payload;
+          state.backendHistory.push(action.payload);
         }
       )
       .addCase(updateBanner.rejected, (state, action) => {
         state.status = "rejected";
-        state.error = action.payload || "Failed to update banner";
+        state.error = action.payload;
       })
-
       // Delete
+
       .addCase(deleteBanner.pending, (state) => {
         state.status = "pending";
         state.error = null;
       })
-      .addCase(deleteBanner.fulfilled, (state) => {
+      .addCase(deleteBanner.fulfilled, (state, action) => {
+        state.banners = state.banners.filter((b) => b._id !== action.meta.arg);
+        // action.meta.arg → delete করার জন্য পাঠানো banner id
+        state.backendResponse = undefined; // optional
         state.status = "fulfilled";
-        state.banner = null;
+        state.error = null;
       })
       .addCase(deleteBanner.rejected, (state, action) => {
         state.status = "rejected";
-        state.error = action.payload || "Failed to delete banner";
+        state.error = action.payload;
       });
   },
 });
