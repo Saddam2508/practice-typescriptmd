@@ -1,0 +1,50 @@
+# Node modules
+node_modules/
+
+# Build directories
+dist/
+build/
+
+# Local environment files
+
+
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# IDE/editor specific
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Dependency lock files (optional)
+
+yarn.lock
+
+# Coverage and test
+coverage/
+*.lcov
+
+# Misc
+
+
+# React Native
+ios/
+android/
+
+# Firebase cache
+.firebase/
+
+
+# Local environment files
+server/.env
+.env
