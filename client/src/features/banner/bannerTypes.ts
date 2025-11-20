@@ -2,6 +2,7 @@ export interface Banner {
   _id?: string; // Optional ID
   title?: string; // Optional title
   image?: string; // Optional image
+  link?: string; // Optional image
   [key: string]: unknown; // Optional extra fields from backend
 }
 
