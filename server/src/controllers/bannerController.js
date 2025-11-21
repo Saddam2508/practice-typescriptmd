@@ -5,7 +5,7 @@ const Banner = require("../models/bannerModel");
 // Create Banner
 const createBanner = async (req, res) => {
   try {
-    const { title, subtitle, link, isActive, position, productId } = req.body;
+    const { title, subtitle, link, isActive, position } = req.body;
     const file = req.file;
 
     if (!title) {
@@ -30,7 +30,7 @@ const createBanner = async (req, res) => {
       link: link || "",
       isActive: isActive !== undefined ? isActive : true,
       position: position ? Number(position) : 0,
-      productId: productId || null, // ✅ এখানে প্রডাক্ট সেভ হবে
+      // productId: productId || null, // ✅ এখানে প্রডাক্ট সেভ হবে
     };
 
     const newBanner = await Banner.create(bannerData);
@@ -46,9 +46,8 @@ const createBanner = async (req, res) => {
 // Get all banners (populate product info)
 const getBanners = async (req, res) => {
   try {
-    const banners = await Banner.find()
-      .sort({ position: 1 })
-      .populate("productId", "name image price"); // ✅ product info আনবে
+    const banners = await Banner.find().sort({ position: 1 });
+    // .populate("productId", "name image price"); // ✅ product info আনবে
     res.json(banners);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -95,7 +94,7 @@ const updateBanner = async (req, res) => {
 // Delete banner
 const deleteBanner = async (req, res) => {
   try {
-    await Banner.findByIdAndDelete(req.params.id);
+    await Banner.findOneAndDelete(req.params.id);
     res.json({ message: "Banner deleted" });
   } catch (err) {
     res.status(500).json({ error: err.message });

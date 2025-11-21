@@ -1,17 +1,21 @@
 export interface Banner {
-  _id?: string; // Optional ID
-  title?: string; // Optional title
-  image?: string; // Optional image
-  link?: string; // Optional image
-  [key: string]: unknown; // Optional extra fields from backend
+  _id?: string;
+  title?: string;
+  subtitle?: string;
+  link?: string;
+  isActive?: boolean;
+  position?: number;
+  image?: string;
+
+  [key: string]: unknown;
 }
 
 export type BannerStatus = "idle" | "pending" | "fulfilled" | "rejected";
 
 export interface BannerState {
-  banners: Banner[]; // UI render এর জন্য main array
-  backendResponse?: Banner; // backend থেকে latest response (optional)
-  backendHistory: Banner[]; // backend থেকে আসা সব responses (history)
+  banners: Banner[];
+  backendResponse?: Banner;
+  backendHistory: Banner[];
   status: BannerStatus;
   error: string | null | undefined;
 }

@@ -28,11 +28,11 @@ const bannerSchema = new mongoose.Schema(
       default: 0, // হোমপেজে কত নম্বরে দেখাবে
     },
     // ✅ Product reference যোগ করা হলো
-    productId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-      required: false,
-    },
+    // productId: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "Product",
+    //   required: false,
+    // },
   },
   {
     timestamps: true,
