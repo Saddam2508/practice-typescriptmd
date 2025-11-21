@@ -57,7 +57,7 @@ const getBanners = async (req, res) => {
 // Update banner
 const updateBanner = async (req, res) => {
   try {
-    const { title, subtitle, link, isActive, position, productId } = req.body;
+    const { title, subtitle, link, isActive, position } = req.body;
     const file = req.file;
 
     const updateData = {
@@ -66,7 +66,7 @@ const updateBanner = async (req, res) => {
       link,
       isActive: isActive === "true" || isActive === true,
       position: position ? Number(position) : 0,
-      productId: productId || null, // ✅ আপডেটেও product id থাকবে
+      // productId: productId || null, // ✅ আপডেটেও product id থাকবে
     };
 
     // যদি নতুন ইমেজ আসে তাহলে আপলোড করব
@@ -82,7 +82,8 @@ const updateBanner = async (req, res) => {
     const updated = await Banner.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
       runValidators: true,
-    }).populate("productId", "name image price");
+    });
+    // .populate("productId", "name image price");
 
     res.json(updated);
   } catch (err) {
