@@ -1,11 +1,12 @@
 export interface Banner {
   _id?: string;
   title?: string;
-  subTitle: string;
+  subtitle?: string;
   link?: string;
-  image?: string;
-  position?: number;
   isActive?: boolean;
+  position?: number;
+  image?: string;
+
   [key: string]: unknown;
 }
 
@@ -13,8 +14,8 @@ export type BannerStatus = "idle" | "pending" | "fulfilled" | "rejected";
 
 export interface BannerState {
   banners: Banner[];
-  backendBanner?: Banner;
-  bannerHistory: Banner[];
+  backendResponse?: Banner;
+  backendHistory: Banner[];
   status: BannerStatus;
   error: string | null | undefined;
 }

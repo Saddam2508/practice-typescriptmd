@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Banner, BannerState } from "./bannerTypes";
 import { AxiosError } from "axios";
 
-// error handle
+//error control
 
 const getErrorMessage = (error: unknown): string => {
   if (error instanceof AxiosError) {
@@ -11,7 +11,7 @@ const getErrorMessage = (error: unknown): string => {
     return axiosError.response?.data?.message || error.message;
   }
   if (error instanceof Error) return error.message;
-  if (typeof error === "string") return error;
+  if (typeof error === "string") return error || "Something went wrong";
   return "Something went wrong";
 };
 
@@ -45,7 +45,7 @@ export const createBanner = createAsyncThunk<
   }
 });
 
-//create Banner
+//update Banner
 
 export const updateBanner = createAsyncThunk<
   Banner,
@@ -79,23 +79,23 @@ export const deleteBanner = createAsyncThunk<
 
 const initialState: BannerState = {
   banners: [],
-  backendBanner: undefined,
-  bannerHistory: [],
+  backendResponse: undefined,
+  backendHistory: [],
   status: "idle",
   error: null,
 };
 
-// slice
+//slice
 
 const bannerSlice = createSlice({
-  name: "banners",
+  name: "banner",
   initialState,
   reducers: {
     resetBanner: (state) => {
-      state.banners = [];
-      state.backendBanner = undefined;
-      state.bannerHistory = [];
       state.status = "idle";
+      state.banners = [];
+      state.backendResponse = undefined;
+      state.backendHistory = [];
       state.error = null;
     },
   },
@@ -124,8 +124,8 @@ const bannerSlice = createSlice({
           state.status = "fulfilled";
           state.error = null;
           state.banners.push(action.payload);
-          state.bannerHistory.push(action.payload);
-          state.backendBanner = action.payload;
+          state.backendResponse = action.payload;
+          state.backendHistory.push(action.payload);
         }
       )
       .addCase(createBanner.rejected, (state, action) => {
@@ -142,13 +142,15 @@ const bannerSlice = createSlice({
           state.status = "fulfilled";
           state.error = null;
           const index = state.banners.findIndex(
-            (b) => b._id === action.payload._id
+            (n) => n._id === action.payload._id
           );
           if (index !== -1) {
             state.banners[index] = action.payload;
-            state.bannerHistory[index] = action.payload;
-            state.backendBanner = action.payload;
+          } else {
+            state.banners.push(action.payload);
           }
+          state.backendResponse = action.payload;
+          state.backendHistory.push(action.payload);
         }
       )
       .addCase(updateBanner.rejected, (state, action) => {
@@ -162,9 +164,8 @@ const bannerSlice = createSlice({
       .addCase(deleteBanner.fulfilled, (state, action) => {
         state.status = "fulfilled";
         state.error = null;
-        state.banners = state.banners.filter((b) => b._id === action.meta.arg);
-
-        state.backendBanner = undefined;
+        state.banners = state.banners.filter((n) => n._id !== action.meta.arg);
+        state.backendResponse = undefined;
       })
       .addCase(deleteBanner.rejected, (state, action) => {
         state.status = "rejected";
