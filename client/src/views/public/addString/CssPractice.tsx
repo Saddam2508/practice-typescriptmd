@@ -5,7 +5,7 @@ import React, { FC, useRef } from "react";
 const CssPractice: FC = () => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  const ITEM_WIDTH = 170;
+  const ITEM_WIDTH = 510;
   const SCROLL_MOUNT = ITEM_WIDTH;
 
   const scrollLeft = () => {
@@ -26,7 +26,7 @@ const CssPractice: FC = () => {
       </button>
       <div
         ref={scrollRef}
-        className="bg-gray-300 w-[90%] h-screen m-5 flex gap-4 justify-start items-center overflow-x-auto scroll"
+        className="bg-gray-300 w-[90%] h-screen m-5 flex gap-4 justify-start items-center overflow-x-auto scroll-smooth no-scrollbar"
       >
         {["A", "B", "C", "D", "E", "F", "G", "H", "I"].map((d) => (
           <div
