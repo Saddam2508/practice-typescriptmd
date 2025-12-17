@@ -1,49 +1,123 @@
-"use client";
+'use client';
 
-import React, { FC, useRef } from "react";
+import React, { FC } from 'react';
+import {
+  Dropdown,
+  DropdownButton,
+  DropdownItem,
+  DropdownMenu,
+  DropdownSubmenu,
+} from './Dropdown';
+
+const menuItems = [
+  {
+    label: 'Profile',
+    href: '/profile',
+    className: '',
+  },
+  {
+    label: 'Settings',
+    className: '',
+    items: [
+      {
+        label: 'Account',
+        href: '/settings/account',
+        className: '',
+      },
+      {
+        label: 'Security',
+        className: '',
+        items: [
+          {
+            label: 'Change Password',
+            href: '/settings/security/password',
+            className: '',
+          },
+          {
+            label: '2FA',
+            href: '/settings/security/2fa',
+            className: '',
+          },
+          {
+            label: '2FA',
+            href: '/settings/security/2fa',
+            className: '',
+          },
+          {
+            label: '2FA',
+            href: '/settings/security/2fa',
+            className: '',
+          },
+          {
+            label: '2FA',
+            href: '/settings/security/2fa',
+            className: '',
+          },
+          {
+            label: '2FA',
+            href: '/settings/security/2fa',
+            className: '',
+          },
+          {
+            label: '2FA',
+            href: '/settings/security/2fa',
+            className: '',
+          },
+          {
+            label: '2FA',
+            href: '/settings/security/2fa',
+            className: '',
+          },
+          {
+            label: '2FA',
+            href: '/settings/security/2fa',
+            className: '',
+          },
+          {
+            label: '2FA',
+            href: '/settings/security/2fa',
+            className: '',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    label: 'Logout',
+    href: '/logout',
+    className: 'text-red-500',
+  },
+];
 
 const CssPractice: FC = () => {
-  const scrollRef = useRef<HTMLDivElement | null>(null);
-
-  const ITEM_WIDTH = 510;
-  const SCROLL_MOUNT = ITEM_WIDTH;
-
-  const scrollLeft = () => {
-    scrollRef.current?.scrollBy({ left: -SCROLL_MOUNT, behavior: "smooth" });
-  };
-  const scrollRight = () => {
-    scrollRef.current?.scrollBy({ left: SCROLL_MOUNT, behavior: "smooth" });
-  };
-
   return (
-    <div className="container w-full h-screen bg-amber-100 relative group flex items-center justify-center">
-      <button
-        onClick={scrollLeft}
-        className="absolute left-0 top-1/2 -translate-y-1/2  bg-amber-500 rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-      >
-        {" "}
-        ◀
-      </button>
-      <div
-        ref={scrollRef}
-        className="bg-gray-300 w-[90%] h-screen m-5 flex gap-4 justify-start items-center overflow-x-auto scroll-smooth no-scrollbar"
-      >
-        {["A", "B", "C", "D", "E", "F", "G", "H", "I"].map((d) => (
-          <div
-            key={d}
-            className="bg-blue-500 h-50 min-w-[140px] flex justify-center items-center rounded-md text-white font-semibold"
-          >
-            {d}
-          </div>
-        ))}
-      </div>
-      <button
-        onClick={scrollRight}
-        className="absolute right-0 top-1/2 -translate-y-1/2 bg-amber-500 rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-      >
-        {" "}
-        ▶
-      </button>
+    <div>
+      <Dropdown className="">
+        <DropdownButton className="px-4 py-2 bg-blue-500 text-white rounded">
+          Menu
+        </DropdownButton>
+
+        <DropdownMenu className="mt-2 w-48 bg-white border rounded-md shadow-lg p-1">
+          {menuItems.map((item, index) =>
+            item.items ? (
+              <DropdownSubmenu
+                key={index}
+                label={item.label}
+                items={item.items}
+                className=""
+              />
+            ) : (
+              <DropdownItem
+                key={index}
+                href={item.href as '#'}
+                className={item.className}
+              >
+                {item.label}
+              </DropdownItem>
+            )
+          )}
+        </DropdownMenu>
+      </Dropdown>
     </div>
   );
 };
