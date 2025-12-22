@@ -1,22 +1,36 @@
+'use client';
+
 import React from 'react';
-import Recursive from './Recursive';
+import DropdownSimple from '../dropdown/DropdownSimple';
 
 const CssPractice = () => {
   const data = [
-    { n: 1, children: [{ n: 2 }, { n: 3, children: [{ n: 4 }] }] },
-    { n: 5 },
+    {
+      label: 'Products',
+      items: [
+        { label: 'Laptop' },
+        {
+          label: 'Mobile',
+          items: [
+            { label: 'Android' },
+            {
+              label: 'iPhone',
+              items: [
+                {
+                  label: 'saddam',
+                  items: [{ label: 'asgor' }],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
   ];
 
   return (
     <div>
-      <h2>Recursive Map Example</h2>
-      {data.map((b, i) =>
-        b.children && b.children.length > 0 ? (
-          <Recursive key={i} items={b.children} />
-        ) : (
-          <div key={i}></div>
-        )
-      )}
+      <DropdownSimple label="Menu" items={data} />
     </div>
   );
 };

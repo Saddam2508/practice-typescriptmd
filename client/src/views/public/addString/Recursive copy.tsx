@@ -4,6 +4,7 @@ interface Item {
   n: number;
   children?: Item[];
 }
+
 interface RecursiveProps {
   items: Item[];
 }
@@ -12,13 +13,14 @@ const Recursive: React.FC<RecursiveProps> = ({ items }) => {
   if (!items || items.length === 0) return null;
 
   return (
-    <div>
-      {items.map((item, i) => (
-        <div key={i}>
+    <ul>
+      {items.map((item, idx) => (
+        <li key={idx}>
+          {/* Recursive call */}
           {item.children && <Recursive items={item.children} />}
-        </div>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 };
 
