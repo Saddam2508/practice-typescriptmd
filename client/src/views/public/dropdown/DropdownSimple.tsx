@@ -1,8 +1,8 @@
-import React from 'react';
+import { FC } from 'react';
 
 interface MenuItem {
   label: string;
-  items?: MenuItem[];
+  items: [];
 }
 
 interface Props {
@@ -10,25 +10,19 @@ interface Props {
   items: MenuItem[];
 }
 
-const DropdownSimple: React.FC<Props> = ({ label, items }) => {
+const DropdownSubmenu: FC<Props> = ({ label, items }) => {
   return (
-    <div style={{ marginLeft: '16px' }}>
-      {/* Parent */}
-      <div style={{ fontWeight: 'bold' }}>{label}</div>
-
-      {/* Children (always visible) */}
+    <div>
+      <div>{label}</div>
       <ul>
-        {items.map((item, idx) =>
+        {items.map((item, i) =>
           item.items ? (
-            // 🔁 recursion
-            <DropdownSimple key={idx} label={item.label} items={item.items} />
+            <DropdownSubmenu key={i} label={item.label} items={item.items} />
           ) : (
-            <li key={idx}>{item.label}</li>
+            <li key={i}>{item.label}</li>
           )
         )}
       </ul>
     </div>
   );
 };
-
-export default DropdownSimple;

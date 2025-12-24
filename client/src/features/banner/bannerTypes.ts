@@ -9,12 +9,18 @@ export interface Banner {
   [key: string]: unknown;
 }
 
-export type BannerStatus = "idle" | "pending" | "fulfilled" | "rejected";
+export type AsyncStatusValue = 'idle' | 'pending' | 'fulfilled' | 'rejected';
 
+interface AsyncStatus {
+  status: AsyncStatusValue;
+  error: string | null | undefined;
+}
 export interface BannerState {
   banners: Banner[];
   backendBanner?: Banner;
   bannerHistory: Banner[];
-  status: BannerStatus;
-  error: string | null | undefined;
+  fetch: AsyncStatus;
+  create: AsyncStatus;
+  update: AsyncStatus;
+  delete: AsyncStatus;
 }
