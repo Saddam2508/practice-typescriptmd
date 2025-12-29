@@ -1,7 +1,11 @@
-interface Banner {
-  _id: string;
-  title: string;
-  image: string;
+export interface Banner {
+  _id?: string;
+  title?: string;
+  subTitle: string;
+  link?: string;
+  image?: string;
+  position?: number;
+  isActive?: boolean;
   [key: string]: unknown;
 }
 
@@ -11,11 +15,10 @@ interface AsyncStatus {
   status: AsyncStatusValue;
   error: string | null | undefined;
 }
-
 export interface BannerState {
-  banners: [];
-  bannersHistory: [];
-  backendResponse?: undefined;
+  banners: Banner[];
+  backendBanner?: Banner;
+  bannerHistory: Banner[];
   fetch: AsyncStatus;
   create: AsyncStatus;
   update: AsyncStatus;
