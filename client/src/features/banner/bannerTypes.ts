@@ -1,4 +1,4 @@
-interface Banner {
+export interface Banner {
   _id: string;
   title: string;
   image: string;
@@ -13,9 +13,9 @@ interface AsyncStatus {
 }
 
 export interface BannerState {
-  banners: [];
-  bannersHistory: [];
-  backendResponse?: undefined;
+  banners: Banner[];
+  bannersHistory: Banner[];
+  backendResponse?: Banner;
   fetch: AsyncStatus;
   create: AsyncStatus;
   update: AsyncStatus;

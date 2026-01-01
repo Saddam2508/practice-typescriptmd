@@ -1,14 +1,11 @@
-import AdminBannerForm from '@/views/admin/AdminBannerForm';
-import CssPractice from '@/views/public/addString/CssPractice';
-
-import ReadMoreExample from '@/views/public/addString/ReadMoreExample';
+import SimpleAdminHeader from '@/views/public/header/AdminHeader';
 
 import React, { FC } from 'react';
 
 const page: FC = () => {
   return (
     <div className="flex items-center, justify-center">
-      <CssPractice />
+      <SimpleAdminHeader />
     </div>
   );
 };

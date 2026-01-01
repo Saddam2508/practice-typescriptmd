@@ -101,6 +101,9 @@ const AdminBannerForm = () => {
           ? Number(value)
           : value,
     }));
+    if (type === 'file' && files?.[0]) {
+      setPreviewImage(URL.createObjectURL(files[0]));
+    }
   };
 
   const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {

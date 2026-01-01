@@ -1,28 +1,30 @@
-import { FC } from 'react';
+import { li } from 'framer-motion/client';
+import React, { FC } from 'react';
 
 interface MenuItem {
   label: string;
   items: [];
 }
-
 interface Props {
   label: string;
   items: MenuItem[];
 }
 
-const DropdownSubmenu: FC<Props> = ({ label, items }) => {
+const DropdownSimple: FC<Props> = ({ label, items }) => {
   return (
     <div>
-      <div>{label}</div>
+      <div> {label} </div>
       <ul>
         {items.map((item, i) =>
           item.items ? (
-            <DropdownSubmenu key={i} label={item.label} items={item.items} />
+            <DropdownSimple key={i} label={item.label} items={item.items} />
           ) : (
-            <li key={i}>{item.label}</li>
+            <li key={i}> {item.label} </li>
           )
         )}
       </ul>
     </div>
   );
 };
+
+export default DropdownSimple;
