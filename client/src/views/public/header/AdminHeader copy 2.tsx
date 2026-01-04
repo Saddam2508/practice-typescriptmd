@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useState } from 'react';
 
 interface MenuItem {
@@ -6,16 +7,18 @@ interface MenuItem {
   items?: MenuItem[];
 }
 
-const SimpleAdminHeader = () => {
-  const [menus, setMenus] = useState<MenuItem[]>([
+const AdminHeader = () => {
+  const initialState: MenuItem[] = [
     { label: 'Home' },
     {
       label: 'Products',
       items: [{ label: 'Mobile' }, { label: 'Laptop' }],
     },
-  ]);
+  ];
 
-  // 🔹 Update label
+  const [menus, setMenus] = useState<MenuItem[]>(initialState);
+
+  // 🔹 Update label of a menu item
   const updateLabel = (path: number[], value: string) => {
     const data = structuredClone(menus);
     let current: MenuItem[] = data;
@@ -25,9 +28,10 @@ const SimpleAdminHeader = () => {
     }
 
     current[path[path.length - 1]].label = value;
+    setMenus(data);
   };
 
-  // 🔹 Add sub menu
+  // 🔹 Add a sub-menu to a specific menu item
   const addSubMenu = (path: number[]) => {
     const data = structuredClone(menus);
     let current: MenuItem[] = data;
@@ -52,22 +56,18 @@ const SimpleAdminHeader = () => {
           style={{
             marginLeft: path.length * 20,
             border: '1px solid #ccc',
-            padding: 10,
+            padding: 8,
             marginBottom: 5,
           }}
         >
           <input
             value={item.label}
             onChange={(e) => updateLabel(currentPath, e.target.value)}
+            style={{ marginRight: 10 }}
           />
+          <button onClick={() => addSubMenu(currentPath)}>+ Sub</button>
 
-          <button
-            onClick={() => addSubMenu(currentPath)}
-            style={{ marginLeft: 10 }}
-          >
-            + Sub
-          </button>
-
+          {/* Recursive children */}
           {item.items && renderMenus(item.items, currentPath)}
         </div>
       );
@@ -76,10 +76,10 @@ const SimpleAdminHeader = () => {
 
   return (
     <div>
-      <h2>Simple Admin Header</h2>
+      <h2>Admin Header</h2>
       {renderMenus(menus)}
     </div>
   );
 };
 
-export default SimpleAdminHeader;
+export default AdminHeader;
