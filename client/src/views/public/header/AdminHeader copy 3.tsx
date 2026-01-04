@@ -17,7 +17,6 @@ const AdminHeader = () => {
   ];
 
   const [menu, setMenu] = useState<MenuItem[]>(initialState);
-  const [showConfirm, setShowConfirm] = useState(false);
 
   const updateMenu = (path: number[], value: string) => {
     const data = structuredClone(menu);
@@ -57,8 +56,7 @@ const AdminHeader = () => {
   };
 
   const removeAllMenus = () => {
-    setMenu([]);
-    setShowConfirm(false);
+    setMenu([]); // সব root item একসাথে remove
   };
 
   const renderMenu = (items: MenuItem[], path: number[] = []) => {
@@ -98,47 +96,10 @@ const AdminHeader = () => {
     <div>
       <div style={{ marginBottom: 10 }}>
         <button onClick={() => addMenu([])}>+ Add Root Menu</button>
-        <button onClick={() => setShowConfirm(true)} style={{ marginLeft: 5 }}>
+        <button onClick={removeAllMenus} style={{ marginLeft: 5 }}>
           Delete All Menus
         </button>
       </div>
-      {showConfirm && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-          }}
-        >
-          <div
-            style={{
-              background: '#fff',
-              padding: 20,
-              width: 350,
-              borderRadius: 8,
-              textAlign: 'center',
-            }}
-          >
-            <h3>Delete All Menus?</h3>
-            <p>This action cannot be undone.</p>
-
-            <div style={{ marginTop: 15 }}>
-              <button
-                onClick={removeAllMenus}
-                style={{ marginRight: 10, background: 'red', color: '#fff' }}
-              >
-                Yes, Delete
-              </button>
-
-              <button onClick={() => setShowConfirm(false)}>Cancel</button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {renderMenu(menu)}
     </div>
