@@ -8,8 +8,8 @@ import React, { FC } from 'react';
 const page: FC = () => {
   return (
     <div className="flex items-center, justify-center">
-      {/* <SimpleAdminHeader /> */}
-      <CssPractice />
+      <SimpleAdminHeader />
+      {/* <CssPractice /> */}
     </div>
   );
 };

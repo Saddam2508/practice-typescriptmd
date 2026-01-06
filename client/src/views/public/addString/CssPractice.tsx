@@ -8,7 +8,6 @@ const CssPractice = () => {
     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium veritatis voluptatem doloremque nisi voluptas rem deserunt quibusdam? Molestias nostrum debitis, deserunt nulla, excepturi recusandae fugit mollitia voluptatum atque cum sed doloribus, explicabo non ducimus soluta! Ducimus quaerat fugit deleniti sunt vitae error optio provident odit maxime ut laudantium quibusdam placeat maiores tenetur itaque neque tempora dolore laboriosam sapiente quas quos obcaecati, illo blanditiis dolorum. Tempore assumenda corporis nesciunt repellendus perspiciatis illum voluptate sit adipisci at dolor doloremque nihil maiores ipsum saepe deleniti laudantium ea doloribus quos id, minima, illo incidunt. Ipsa accusamus odio reiciendis mollitia, maxime consequatur vitae et reprehenderit.';
 
   const togglePara = () => {
-    setClose(!close);
     setOpen(true);
   };
 
@@ -53,13 +52,22 @@ const CssPractice = () => {
             <p>This action cannot be undone.</p>
             <div style={{ marginTop: 15 }}>
               <button
-                onClick={removeAllMenus}
+                onClick={() => {
+                  setClose(!close);
+                  removeAllMenus();
+                }}
                 style={{ marginRight: 10, background: 'red', color: '#fff' }}
               >
                 Yes, Delete
               </button>
 
-              <button onClick={() => setOpen(false)}>Cancel</button>
+              <button
+                onClick={() => {
+                  setOpen(false);
+                }}
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
